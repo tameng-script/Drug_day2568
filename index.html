@@ -3,481 +3,639 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แบบทดสอบวันสุนทรภู่</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>แบบทดสอบวันต่อต้านยาเสพติด</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <style>
         body {
-            font-family: 'Sarabun', sans-serif;
-            background-color: #f8f5f2;
+            font-family: 'Prompt', sans-serif;
+             background-image: url('https://i.pinimg.com/474x/c5/ac/dd/c5acdddfb6a30b5d3fef0f6d7d97073f.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
         }
-        .container {
-            max-width: 900px;
-        }
-        .quiz-card {
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-        .btn-primary {
-            background-color: #4f46e5;
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #4338ca;
-            transform: translateY(-2px);
-        }
-        .option-btn {
-            transition: all 0.2s;
-            border: 2px solid #e5e7eb;
-        }
-        .option-btn:hover {
-            border-color: #4f46e5;
-        }
-        .option-btn.selected {
-            background-color: #4f46e5;
-            color: white;
-            border-color: #4f46e5;
-        }
-        .option-btn.correct {
-            background-color: #10b981;
-            color: white;
-            border-color: #10b981;
-        }
-        .option-btn.incorrect {
-            background-color: #ef4444;
-            color: white;
-            border-color: #ef4444;
-        }
-        .header-image {
-            max-height: 200px;
-            object-fit: contain;
-        }
-        .certificate {
-            position: relative;
-            width: 100%;
+        .quiz-container {
             max-width: 800px;
             margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
         }
-        .certificate-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            text-align: center;
+        .option-btn {
+            transition: all 0.3s ease;
         }
-        .tab {
-            cursor: pointer;
-            transition: all 0.3s;
+        .option-btn:hover {
+            transform: translateY(-2px);
         }
-        .tab.active {
-            border-bottom: 3px solid #4f46e5;
-            color: #4f46e5;
-            font-weight: bold;
+        .correct-answer {
+            background-color: #86efac !important;
+            border-color: #22c55e !important;
+        }
+        .wrong-answer {
+            background-color: #fecaca !important;
+            border-color: #ef4444 !important;
         }
         .dashboard-card {
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
         }
         .dashboard-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        .answer-table {
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
         }
-        .answer-table th, .answer-table td {
-            border: 1px solid #e5e7eb;
-            padding: 8px 12px;
+        th, td {
+            padding: 12px;
             text-align: left;
+            border-bottom: 1px solid #e5e7eb;
         }
-        .answer-table th {
+        th {
             background-color: #f3f4f6;
+            font-weight: 600;
         }
-        .answer-table .correct-answer {
-            color: #10b981;
-            font-weight: bold;
+        tr:hover {
+            background-color: #f9fafb;
         }
-        .answer-table .wrong-answer {
-            color: #ef4444;
+        .animate-bounce {
+            animation: bounce 1s infinite;
         }
-        .check-icon {
-            color: #10b981;
-            margin-left: 5px;
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-5%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+        header, footer {
+            background-color: rgba(31, 41, 55, 0.95);
+        }
+        .instruction-item {
+            display: flex;
+            margin-bottom: 12px;
+        }
+        .instruction-number {
+            background-color: #3b82f6;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .help-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3b82f6;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .help-icon:hover {
+            transform: scale(1.1);
+            background-color: #2563eb;
         }
     </style>
 </head>
 <body>
-    <div class="container mx-auto px-4 py-8">
-        <!-- Login Page -->
-        <div id="login-page" class="flex flex-col items-center">
-            <div class="w-full max-w-md bg-white rounded-lg quiz-card p-8 mb-8">
-                <div class="text-center mb-6">
-                    <img src="https://images.dmc.tv/www/images/sarm/3626;3640;3609;3607;3619;3616;3641;3656;400.jpg" alt="สุนทรภู่" class="header-image mx-auto mb-4">
-                    <h1 class="text-3xl font-bold text-indigo-800">📚 แบบทดสอบวันสุนทรภู่ 📚</h1>
-                    <p class="text-gray-600 mt-2">สำหรับนักเรียนระดับชั้นประถมศึกษา</p>
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 shadow-lg">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4 md:mb-0">📚 แบบทดสอบวันต่อต้านยาเสพติด</h1>
+                <nav>
+                    <ul class="flex space-x-4">
+                        <li><button id="nav-home" class="px-3 py-1 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">หน้าแรก</button></li>
+                        <li><button id="nav-scores" class="px-3 py-1 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">ตารางคะแนน</button></li>
+                        <li><button id="nav-dashboard" class="px-3 py-1 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition">แดชบอร์ด</button></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <!-- Login Page -->
+            <div id="login-page" class="quiz-container bg-white rounded-xl shadow-lg p-6 md:p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-block p-4 rounded-full bg-blue-100 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-blue-700 mb-2">🎓 ยินดีต้อนรับสู่แบบทดสอบ</h2>
+                    <p class="text-lg text-gray-600">วันต่อต้านยาเสพติด สำหรับนักเรียนระดับชั้นประถมศึกษา</p>
                 </div>
-                <div class="mb-6">
-                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">ชื่อ-นามสกุล:</label>
-                    <input type="text" id="username" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500" placeholder="กรุณากรอกชื่อ-นามสกุล">
-                </div>
-                <div class="mb-6">
-                    <label for="classroom" class="block text-gray-700 text-sm font-bold mb-2">ระดับชั้น:</label>
-                    <select id="classroom" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-indigo-500">
-                        <option value="">เลือกระดับชั้น</option>
-                        <option value="ป.1">ประถมศึกษาปีที่ 1</option>
-                        <option value="ป.2">ประถมศึกษาปีที่ 2</option>
-                        <option value="ป.3">ประถมศึกษาปีที่ 3</option>
-                        <option value="ป.4">ประถมศึกษาปีที่ 4</option>
-                        <option value="ป.5">ประถมศึกษาปีที่ 5</option>
-                        <option value="ป.6">ประถมศึกษาปีที่ 6</option>
-                    </select>
-                </div>
-                <div class="flex items-center justify-between">
-                    <button id="start-quiz-btn" class="btn-primary w-full text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline flex items-center justify-center">
+                
+                <div class="max-w-md mx-auto">
+                    <div class="mb-6">
+                        <label for="username" class="block text-gray-700 font-medium mb-2">ชื่อ-นามสกุล</label>
+                        <input type="text" id="username" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 transition" placeholder="กรุณากรอกชื่อ-นามสกุล">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="classroom" class="block text-gray-700 font-medium mb-2">ชั้นเรียน</label>
+                        <select id="classroom" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 transition">
+                            <option value="">เลือกชั้นเรียน</option>
+                            <option value="ป.1">ประถมศึกษาปีที่ 1</option>
+                            <option value="ป.2">ประถมศึกษาปีที่ 2</option>
+                            <option value="ป.3">ประถมศึกษาปีที่ 3</option>
+                            <option value="ป.4">ประถมศึกษาปีที่ 4</option>
+                            <option value="ป.5">ประถมศึกษาปีที่ 5</option>
+                            <option value="ป.6">ประถมศึกษาปีที่ 6</option>
+                        </select>
+                    </div>
+                    
+                    <button id="start-quiz" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center">
                         <span class="mr-2">เริ่มทำแบบทดสอบ</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-bounce" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
                     </button>
                 </div>
-                <div class="mt-6 flex justify-center space-x-4">
-                    <button id="show-scores-btn" class="text-indigo-600 hover:text-indigo-800 font-medium">
-                        📊 ดูตารางคะแนน
-                    </button>
-                    <button id="show-dashboard-btn" class="text-indigo-600 hover:text-indigo-800 font-medium">
-                        📋 แดชบอร์ด
-                    </button>
-                </div>
             </div>
-        </div>
 
-        <!-- Quiz Page -->
-        <div id="quiz-page" class="hidden">
-            <div class="bg-white rounded-lg quiz-card p-6 mb-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-indigo-800">📝 แบบทดสอบวันสุนทรภู่</h2>
+            <!-- Quiz Page -->
+            <div id="quiz-page" class="quiz-container bg-white rounded-xl shadow-lg p-6 md:p-8 hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                     <div>
-                        <span id="current-question" class="font-bold text-indigo-600">1</span>
-                        <span class="text-gray-500">/10</span>
+                        <h2 class="text-2xl font-bold text-blue-700">📝 แบบทดสอบวันต่อต้านยาเสพติด</h2>
+                        <p class="text-gray-600" id="user-info"></p>
+                    </div>
+                    <div class="bg-blue-100 text-blue-800 font-medium px-4 py-2 rounded-lg mt-2 md:mt-0">
+                        <span id="current-question">1</span>/<span id="total-questions">10</span>
                     </div>
                 </div>
-                <div id="question-container" class="mb-6">
-                    <p id="question-text" class="text-lg font-medium mb-4"></p>
-                    <div id="options-container" class="space-y-3">
-                        <!-- Options will be inserted here -->
-                    </div>
+                
+                <div class="bg-blue-50 rounded-lg p-4 mb-6">
+                    <p class="text-lg font-medium" id="question-text"></p>
                 </div>
+                
+                <div class="space-y-3 mb-6" id="options-container">
+                    <!-- Options will be inserted here -->
+                </div>
+                
+                <div id="explanation-box" class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 hidden">
+                    <h3 class="font-bold text-green-800 mb-1">คำอธิบาย</h3>
+                    <p id="explanation-text" class="text-green-700"></p>
+                </div>
+                
                 <div class="flex justify-between">
-                    <button id="prev-btn" class="btn-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">
+                    <button id="prev-question" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition hidden">
                         ย้อนกลับ
                     </button>
-                    <button id="show-explanation-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        📝 เฉลย
-                    </button>
-                    <button id="next-btn" class="btn-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">
+                    <button id="next-question" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition ml-auto">
                         ข้อถัดไป
                     </button>
-                    <button id="finish-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hidden">
+                    <button id="finish-quiz" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition hidden">
                         ส่งคำตอบ
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Results Page -->
-        <div id="results-page" class="hidden">
-            <div class="bg-white rounded-lg quiz-card p-6 mb-8">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold text-indigo-800">🎉 ผลการทดสอบ 🎉</h2>
-                    <p class="text-gray-600 mt-2">คุณ <span id="result-name" class="font-medium"></span></p>
-                    <p class="text-gray-600">ระดับชั้น <span id="result-classroom" class="font-medium"></span></p>
-                    <p class="text-gray-600">วันที่ทดสอบ <span id="result-date" class="font-medium"></span></p>
+            <!-- Results Page -->
+            <div id="results-page" class="quiz-container bg-white rounded-xl shadow-lg p-6 md:p-8 hidden">
+                <div class="text-center mb-8">
+                    <div class="inline-block p-4 rounded-full bg-blue-100 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-blue-700 mb-2">🎉 ผลการทดสอบ</h2>
+                    <p class="text-lg text-gray-600 mb-2" id="result-user-info"></p>
+                    <p class="text-lg text-gray-600" id="result-date"></p>
                 </div>
-                <div class="flex justify-center mb-6">
-                    <div class="text-center">
-                        <div class="text-5xl font-bold text-indigo-600 mb-2">
-                            <span id="score">0</span>
-                            <span class="text-gray-500">/100</span>
-                        </div>
-                        <p id="pass-status" class="text-lg font-medium"></p>
+                
+                <div class="bg-blue-50 rounded-xl p-6 mb-8 text-center">
+                    <p class="text-xl mb-2">คะแนนของคุณ</p>
+                    <p class="text-5xl font-bold text-blue-700"><span id="score">0</span> / 100</p>
+                    <p class="mt-2 text-lg" id="pass-status"></p>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold mb-4">สรุปคำตอบ</h3>
+                    <div class="space-y-4" id="answers-summary">
+                        <!-- Summary will be inserted here -->
                     </div>
                 </div>
-                <div id="certificate-section" class="hidden mb-6">
-                    <div class="text-center">
-                        <button id="generate-certificate-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                            🏆 พิมพ์เกียรติบัตร
-                        </button>
-                    </div>
-                </div>
-                <div class="flex justify-center space-x-4">
-                    <button id="show-answers-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        📝 ดูเฉลยทั้งหมด
+                
+                <div class="flex flex-wrap gap-4">
+                    <button id="retry-quiz" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">
+                        ทำแบบทดสอบอีกครั้ง
                     </button>
-                    <button id="retry-btn" class="btn-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        🔄 ทำแบบทดสอบอีกครั้ง
-                    </button>
-                    <button id="view-scores-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        📊 ดูตารางคะแนน
+                    <button id="view-scores" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition">
+                        ดูตารางคะแนน
                     </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Scores Page -->
-        <div id="scores-page" class="hidden">
-            <div class="bg-white rounded-lg quiz-card p-6 mb-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-indigo-800">📊 ตารางคะแนน</h2>
-                    <button id="back-to-home-from-scores" class="text-indigo-600 hover:text-indigo-800">
-                        ← กลับหน้าหลัก
+            <!-- Scores Page -->
+            <div id="scores-page" class="quiz-container bg-white rounded-xl shadow-lg p-6 md:p-8 hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <h2 class="text-2xl font-bold text-blue-700">🏆 ตารางคะแนน</h2>
+                    <button id="refresh-scores" class="bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2 px-4 rounded-lg transition flex items-center mt-2 md:mt-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                        </svg>
+                        รีเฟรช
                     </button>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white">
+                
+                <div class="table-container mb-6">
+                    <table>
                         <thead>
                             <tr>
-                                <th class="py-2 px-4 border-b border-gray-200 bg-indigo-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ลำดับ</th>
-                                <th class="py-2 px-4 border-b border-gray-200 bg-indigo-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ชื่อ-นามสกุล</th>
-                                <th class="py-2 px-4 border-b border-gray-200 bg-indigo-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ระดับชั้น</th>
-                                <th class="py-2 px-4 border-b border-gray-200 bg-indigo-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">คะแนน</th>
-                                <th class="py-2 px-4 border-b border-gray-200 bg-indigo-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">วันที่ทดสอบ</th>
-                                <th class="py-2 px-4 border-b border-gray-200 bg-indigo-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ผลการทดสอบ</th>
+                                <th>ลำดับ</th>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>ชั้น</th>
+                                <th>คะแนน</th>
+                                <th>วันที่</th>
+                                <th>ผลการสอบ</th>
                             </tr>
                         </thead>
                         <tbody id="scores-table-body">
                             <!-- Scores will be inserted here -->
                             <tr>
-                                <td colspan="6" class="py-4 px-4 text-center text-gray-500">กำลังโหลดข้อมูล...</td>
+                                <td colspan="6" class="text-center py-4 text-gray-500">กำลังโหลดข้อมูล...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                
+                <button id="back-to-home" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition">
+                    กลับสู่หน้าแรก
+                </button>
             </div>
-        </div>
 
-        <!-- Dashboard Page -->
-        <div id="dashboard-page" class="hidden">
-            <div class="bg-white rounded-lg quiz-card p-6 mb-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-indigo-800">📋 แดชบอร์ด</h2>
-                    <button id="back-to-home-from-dashboard" class="text-indigo-600 hover:text-indigo-800">
-                        ← กลับหน้าหลัก
-                    </button>
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="quiz-container bg-white rounded-xl shadow-lg p-6 md:p-8 hidden">
+                <h2 class="text-2xl font-bold text-blue-700 mb-6">📊 แดชบอร์ด</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="dashboard-card bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
+                        <h3 class="text-lg font-medium text-blue-700 mb-2">จำนวนผู้ทำแบบทดสอบ</h3>
+                        <p class="text-4xl font-bold text-blue-800" id="total-participants">0</p>
+                    </div>
+                    
+                    <div class="dashboard-card bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+                        <h3 class="text-lg font-medium text-green-700 mb-2">จำนวนผู้สอบผ่าน</h3>
+                        <p class="text-4xl font-bold text-green-800" id="total-passed">0</p>
+                    </div>
+                    
+                    <div class="dashboard-card bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+                        <h3 class="text-lg font-medium text-red-700 mb-2">จำนวนผู้สอบไม่ผ่าน</h3>
+                        <p class="text-4xl font-bold text-red-800" id="total-failed">0</p>
+                    </div>
                 </div>
                 
-                <div class="flex mb-6 border-b">
-                    <div class="tab active px-4 py-2" data-tab="summary">สรุปผล</div>
-                    <div class="tab px-4 py-2" data-tab="certificates">เกียรติบัตร</div>
+                <h3 class="text-xl font-bold text-blue-700 mb-4">ผู้ที่สอบผ่าน</h3>
+                <div class="table-container mb-6">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ลำดับ</th>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>ชั้น</th>
+                                <th>คะแนน</th>
+                                <th>วันที่</th>
+                            </tr>
+                        </thead>
+                        <tbody id="passed-table-body">
+                            <!-- Passed students will be inserted here -->
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-gray-500">กำลังโหลดข้อมูล...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 
-                <div id="summary-tab" class="tab-content">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div class="bg-blue-50 p-4 rounded-lg dashboard-card">
-                            <p class="text-sm text-blue-600 font-medium">ผู้เข้าทดสอบทั้งหมด</p>
-                            <p id="total-participants" class="text-3xl font-bold text-blue-800">0</p>
+                <button id="back-to-home-from-dashboard" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition">
+                    กลับสู่หน้าแรก
+                </button>
+            </div>
+
+            <!-- Instructions Modal -->
+            <div id="instructions-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                <div class="bg-white rounded-xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-blue-700">📋 คำแนะนำการใช้งาน</h2>
+                        <button id="close-instructions" class="text-gray-500 hover:text-gray-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">การเริ่มทำแบบทดสอบ</h3>
+                            <div class="space-y-2">
+                                <div class="instruction-item">
+                                    <div class="instruction-number">1</div>
+                                    <div>กรอกชื่อ-นามสกุลของคุณให้ครบถ้วน</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">2</div>
+                                    <div>เลือกชั้นเรียนของคุณจากรายการ</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">3</div>
+                                    <div>คลิกปุ่ม "เริ่มทำแบบทดสอบ" เพื่อเริ่มทำข้อสอบ</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-green-50 p-4 rounded-lg dashboard-card">
-                            <p class="text-sm text-green-600 font-medium">ผ่านเกณฑ์</p>
-                            <p id="passed-count" class="text-3xl font-bold text-green-800">0</p>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">การทำแบบทดสอบ</h3>
+                            <div class="space-y-2">
+                                <div class="instruction-item">
+                                    <div class="instruction-number">1</div>
+                                    <div>อ่านคำถามและตัวเลือกให้เข้าใจ</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">2</div>
+                                    <div>คลิกเลือกคำตอบที่คุณคิดว่าถูกต้อง</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">3</div>
+                                    <div>หลังจากเลือกคำตอบ จะมีคำอธิบายแสดงขึ้นมา</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">4</div>
+                                    <div>คลิกปุ่ม "ข้อถัดไป" เพื่อไปยังคำถามถัดไป</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">5</div>
+                                    <div>ทำครบทุกข้อแล้วคลิกปุ่ม "ส่งคำตอบ" เพื่อดูผลคะแนน</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-red-50 p-4 rounded-lg dashboard-card">
-                            <p class="text-sm text-red-600 font-medium">ไม่ผ่านเกณฑ์</p>
-                            <p id="failed-count" class="text-3xl font-bold text-red-800">0</p>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">การดูผลคะแนน</h3>
+                            <div class="space-y-2">
+                                <div class="instruction-item">
+                                    <div class="instruction-number">1</div>
+                                    <div>หลังจากส่งคำตอบ คุณจะเห็นคะแนนและสรุปคำตอบของคุณ</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">2</div>
+                                    <div>คลิกปุ่ม "ทำแบบทดสอบอีกครั้ง" หากต้องการทำใหม่</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">3</div>
+                                    <div>คลิกปุ่ม "ดูตารางคะแนน" เพื่อดูคะแนนของทุกคน</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">เมนูนำทาง</h3>
+                            <div class="space-y-2">
+                                <div class="instruction-item">
+                                    <div class="instruction-number">1</div>
+                                    <div>"หน้าแรก" - กลับไปยังหน้าเริ่มต้น</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">2</div>
+                                    <div>"ตารางคะแนน" - ดูคะแนนของทุกคนที่ทำแบบทดสอบ</div>
+                                </div>
+                                <div class="instruction-item">
+                                    <div class="instruction-number">3</div>
+                                    <div>"แดชบอร์ด" - ดูสถิติและข้อมูลสรุปของการทำแบบทดสอบ</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="mb-6">
-                        <h3 class="text-lg font-bold text-gray-700 mb-3">ผู้ที่ผ่านเกณฑ์</h3>
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full bg-white">
-                                <thead>
-                                    <tr>
-                                        <th class="py-2 px-4 border-b border-gray-200 bg-green-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ลำดับ</th>
-                                        <th class="py-2 px-4 border-b border-gray-200 bg-green-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ชื่อ-นามสกุล</th>
-                                        <th class="py-2 px-4 border-b border-gray-200 bg-green-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ระดับชั้น</th>
-                                        <th class="py-2 px-4 border-b border-gray-200 bg-green-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">คะแนน</th>
-                                        <th class="py-2 px-4 border-b border-gray-200 bg-green-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">วันที่ทดสอบ</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="passed-table-body">
-                                    <!-- Passed students will be inserted here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="certificates-tab" class="tab-content hidden">
-                    <div class="mb-6">
-                        <h3 class="text-lg font-bold text-gray-700 mb-3">สร้างเกียรติบัตร</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="certificate-list">
-                            <!-- Certificate cards will be inserted here -->
-                        </div>
+                    <div class="mt-6">
+                        <button id="close-instructions-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                            เข้าใจแล้ว
+                        </button>
                     </div>
                 </div>
             </div>
+        </main>
+
+        <!-- Help Button -->
+        <div class="help-icon" id="show-instructions">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
         </div>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-6">
+            <div class="container mx-auto px-4 text-center">
+                <p>© 2025 แบบทดสอบวันต่อต้านยาเสพติด จัดทำโดย นายศราวุธ น้อยผา</p>
+            </div>
+        </footer>
     </div>
 
     <script>
+        // Constants
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwt6g-yNU3rKWev9XXp9LYbW4wxJRFM6JTkiG--oTI5LpyLie7ReTyXZ4nIUmuYu4QAJQ/exec';
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1sEK5xMVEjykrhYLBC8j66C_w6Z0XHhBAJcmYZalVAlU/edit?gid=0#gid=0';
+        const PASS_SCORE = 60; // Score needed to pass the quiz
+
         // Quiz questions
         const quizQuestions = [
             {
-                question: "วันสุนทรภู่ตรงกับวันที่เท่าไร?",
-                options: ["24 มิถุนายน", "26 มิถุนายน", "28 มิถุนายน", "30 มิถุนายน"],
-                answer: 1,
-                explanation: "วันสุนทรภู่ตรงกับวันที่ 26 มิถุนายน ของทุกปี ซึ่งเป็นวันเกิดของสุนทรภู่"
+                question: "วันต่อต้านยาเสพติดโลกตรงกับวันที่เท่าไร?",
+                options: ["25 มิถุนายน", "26 มิถุนายน", "27 มิถุนายน", "28 มิถุนายน"],
+                correctAnswer: 1,
+                explanation: "วันต่อต้านยาเสพติดโลก (International Day Against Drug Abuse and Illicit Trafficking) ตรงกับวันที่ 26 มิถุนายนของทุกปี ซึ่งกำหนดโดยองค์การสหประชาชาติ"
             },
             {
-                question: "สุนทรภู่เกิดในรัชสมัยของพระมหากษัตริย์พระองค์ใด?",
-                options: ["รัชกาลที่ 1", "รัชกาลที่ 2", "รัชกาลที่ 3", "รัชกาลที่ 4"],
-                answer: 0,
-                explanation: "สุนทรภู่เกิดในรัชสมัยของพระบาทสมเด็จพระพุทธยอดฟ้าจุฬาโลกมหาราช (รัชกาลที่ 1) เมื่อปี พ.ศ. 2329"
+                question: "ข้อใดไม่ใช่ยาเสพติด?",
+                options: ["บุหรี่", "เครื่องดื่มชูกำลัง", "เหล้า", "ยาบ้า"],
+                correctAnswer: 1,
+                explanation: "เครื่องดื่มชูกำลังไม่จัดเป็นยาเสพติด แม้จะมีคาเฟอีนแต่ไม่ก่อให้เกิดการเสพติด ส่วนบุหรี่ เหล้า และยาบ้าเป็นสารเสพติดที่ทำให้เกิดการเสพติดได้"
             },
             {
-                question: "สุนทรภู่มีชื่อเล่นว่าอะไร?",
-                options: ["ภู่", "ทรภู", "ทรภู่", "ภู"],
-                answer: 1,
-                explanation: "สุนทรภู่มีชื่อเล่นว่า 'ภู่' ส่วนคำว่า 'สุนทร' เป็นคำที่ได้รับพระราชทานในภายหลัง"
+                question: "สัญลักษณ์ของวันต่อต้านยาเสพติดโลกคือข้อใด?",
+                options: ["ดอกกุหลาบสีขาว", "ดอกทานตะวัน", "ดอกป๊อปปี้", "ดอกกล้วยไม้"],
+                correctAnswer: 0,
+                explanation: "ดอกกุหลาบสีขาวเป็นสัญลักษณ์ของวันต่อต้านยาเสพติดโลก แสดงถึงความบริสุทธิ์และชีวิตที่ปลอดจากยาเสพติด"
             },
             {
-                question: "วรรณกรรมเรื่องใดไม่ใช่ผลงานของสุนทรภู่?",
-                options: ["พระอภัยมณี", "นิราศภูเขาทอง", "ขุนช้างขุนแผน", "นิราศเมืองแกลง"],
-                answer: 2,
-                explanation: "ขุนช้างขุนแผน หรือ เสภาเรื่องขุนช้างขุนแผน ไม่ใช่ผลงานของสุนทรภู่ แต่เป็นวรรณกรรมที่แต่งโดยกวีหลายท่าน"
+                question: "ข้อใดเป็นผลกระทบของการใช้ยาเสพติด?",
+                options: ["สุขภาพแข็งแรง", "มีความสุขตลอดเวลา", "สมองถูกทำลาย", "เรียนหนังสือได้ดีขึ้น"],
+                correctAnswer: 2,
+                explanation: "การใช้ยาเสพติดส่งผลให้สมองถูกทำลาย ทำให้ความจำเสื่อม สมาธิลดลง และอาจเกิดอาการทางจิตได้"
             },
             {
-                question: "สุนทรภู่ได้รับการยกย่องจากองค์การยูเนสโกให้เป็นบุคคลสำคัญของโลกในด้านใด?",
-                options: ["กวีเอกของโลก", "ปราชญ์เอกของโลก", "นักประพันธ์เอกของโลก", "บุคคลสำคัญทางวัฒนธรรมของโลก"],
-                answer: 0,
-                explanation: "สุนทรภู่ได้รับการยกย่องจากองค์การยูเนสโกให้เป็น 'กวีเอกของโลก' เมื่อปี พ.ศ. 2529 ในโอกาสครบรอบ 200 ปีชาตกาล"
+                question: "หากมีคนแปลกหน้าเสนอขนมหรือเครื่องดื่มให้ นักเรียนควรทำอย่างไร?",
+                options: ["รับไว้และกินทันที", "รับไว้แต่ไม่กิน", "ปฏิเสธอย่างสุภาพ", "รับไว้แล้วแบ่งให้เพื่อน"],
+                correctAnswer: 2,
+                explanation: "นักเรียนควรปฏิเสธอย่างสุภาพ เพราะอาจมีสารเสพติดหรือสิ่งอันตรายปนอยู่ในขนมหรือเครื่องดื่มที่คนแปลกหน้าเสนอให้"
             },
             {
-                question: "ตัวละครใดเป็นตัวละครเอกในเรื่อง 'พระอภัยมณี'?",
-                options: ["ขุนแผน", "พระลอ", "พระอภัยมณี", "ไกรทอง"],
-                answer: 2,
-                explanation: "พระอภัยมณี เป็นตัวละครเอกในวรรณกรรมเรื่อง 'พระอภัยมณี' ซึ่งเป็นผลงานชิ้นเอกของสุนทรภู่"
+                question: "คำขวัญวันต่อต้านยาเสพติดของประเทศไทยปี 2568 คือข้อใด?",
+                options: ["ร่วมแรงร่วมใจ ต้านภัยยาเสพติด", "คิดดี ทำดี ต่อต้านยาเสพติด", "ทุกชีวิตปลอดภัยห่างไกลยาเสพติด", "สร้างพลังไทย หยุดภัยยาเสพติด"],
+                correctAnswer: 3,
+                explanation: "คำขวัญวันต่อต้านยาเสพติดของประเทศไทยปี 2568 คือ 'Stop Drugs, Start Power สร้างพลังไทย หยุดภัยยาเสพติด' ทุกคนสามารถเป็นส่วนหนึ่งในการป้องกันและแก้ไขปัญหายาเสพติดได้"
             },
             {
-                question: "สุนทรภู่มีความเชี่ยวชาญพิเศษในการแต่งคำประพันธ์ประเภทใด?",
-                options: ["กลอนสุภาพ", "โคลงสี่สุภาพ", "กาพย์ยานี 11", "ร่ายยาว"],
-                answer: 0,
-                explanation: "สุนทรภู่มีความเชี่ยวชาญพิเศษในการแต่งคำประพันธ์ประเภทกลอนสุภาพ จนได้รับการยกย่องว่าเป็น 'เจ้าพ่อกลอนสุภาพ'"
+                question: "ข้อใดไม่ใช่วิธีการป้องกันตนเองจากยาเสพติด?",
+                options: ["เลือกคบเพื่อนที่ดี", "ใช้เวลาว่างให้เป็นประโยชน์", "ศึกษาเรื่องยาเสพติดให้เข้าใจ", "ลองยาเสพติดเพียงครั้งเดียวเพื่อรู้ว่าไม่ดี"],
+                correctAnswer: 3,
+                explanation: "การลองยาเสพติดแม้เพียงครั้งเดียวก็อาจนำไปสู่การเสพติดได้ จึงไม่ใช่วิธีการป้องกันตนเองจากยาเสพติด"
             },
             {
-                question: "นิราศเรื่องใดเป็นนิราศเรื่องแรกของสุนทรภู่?",
-                options: ["นิราศภูเขาทอง", "นิราศเมืองแกลง", "นิราศพระบาท", "นิราศสุพรรณ"],
-                answer: 0,
-                explanation: "นิราศภูเขาทอง เป็นนิราศเรื่องแรกของสุนทรภู่ แต่งขึ้นเมื่อครั้งเดินทางไปนมัสการพระเจดีย์ภูเขาทองที่วัดสระเกศ"
+                question: "หน่วยงานใดในประเทศไทยที่รับผิดชอบหลักในการป้องกันและปราบปรามยาเสพติด?",
+                options: ["สำนักงาน ป.ป.ส.", "กระทรวงสาธารณสุข", "กระทรวงศึกษาธิการ", "กรมการปกครอง"],
+                correctAnswer: 0,
+                explanation: "สำนักงานคณะกรรมการป้องกันและปราบปรามยาเสพติด (ป.ป.ส.) เป็นหน่วยงานหลักที่รับผิดชอบในการป้องกันและปราบปรามยาเสพติดในประเทศไทย"
             },
             {
-                question: "สุนทรภู่เคยบวชเป็นพระภิกษุที่วัดใด?",
-                options: ["วัดพระเชตุพนฯ (วัดโพธิ์)", "วัดราชบูรณะ", "วัดเทพธิดาราม", "วัดอรุณราชวราราม (วัดแจ้ง)"],
-                answer: 2,
-                explanation: "สุนทรภู่เคยบวชเป็นพระภิกษุที่วัดเทพธิดาราม ในช่วงที่ตกอับและถูกกลั่นแกล้งในรัชกาลที่ 3"
+                question: "ข้อใดเป็นสาเหตุสำคัญที่ทำให้เด็กและเยาวชนเข้าไปเกี่ยวข้องกับยาเสพติด?",
+                options: ["อยากรู้อยากลอง", "มีความรู้เรื่องยาเสพติดมาก", "มีครอบครัวที่อบอุ่น", "เล่นกีฬาเป็นประจำ"],
+                correctAnswer: 0,
+                explanation: "ความอยากรู้อยากลองเป็นสาเหตุสำคัญที่ทำให้เด็กและเยาวชนเข้าไปเกี่ยวข้องกับยาเสพติด โดยเฉพาะในวัยที่ต้องการค้นหาตัวเองและต้องการการยอมรับจากกลุ่มเพื่อน"
             },
             {
-                question: "ข้อใดไม่ใช่ลักษณะเด่นในงานของสุนทรภู่?",
-                options: ["ใช้ภาษาเรียบง่าย เข้าใจง่าย", "มีการสอดแทรกคติสอนใจ", "นิยมใช้คำภาษาบาลีสันสกฤตยาก ๆ", "มีอารมณ์ขัน"],
-                answer: 2,
-                explanation: "สุนทรภู่มีลักษณะเด่นในการใช้ภาษาที่เรียบง่าย เข้าใจง่าย ไม่นิยมใช้คำภาษาบาลีสันสกฤตที่ยากเกินไป เพื่อให้คนทั่วไปสามารถเข้าใจได้"
+                question: "หากพบเห็นการซื้อขายยาเสพติด นักเรียนควรทำอย่างไร?",
+                options: ["เข้าไปห้ามปราม", "แจ้งผู้ปกครองหรือครู", "เพิกเฉย ไม่สนใจ", "ถ่ายรูปแล้วโพสต์ลงโซเชียลมีเดีย"],
+                correctAnswer: 1,
+                explanation: "นักเรียนควรแจ้งผู้ปกครองหรือครูทันที เพื่อให้ผู้ใหญ่ดำเนินการแจ้งเจ้าหน้าที่ที่เกี่ยวข้อง ไม่ควรเข้าไปเกี่ยวข้องโดยตรงเพราะอาจเป็นอันตราย"
             }
         ];
 
-        // Variables
+        // Global variables
+        let currentUser = {
+            name: "",
+            classroom: ""
+        };
         let currentQuestionIndex = 0;
+        let userAnswers = [];
         let score = 0;
-        let userAnswers = Array(quizQuestions.length).fill(null);
-        let username = "";
-        let classroom = "";
-        let quizDate = "";
+        let quizData = [];
         let shuffledQuestions = [];
-        let originalQuestionOrder = []; // เก็บลำดับคำถามเดิมเพื่อใช้ในการแสดงเฉลย
 
         // DOM Elements
-        const loginPage = document.getElementById('login-page');
-        const quizPage = document.getElementById('quiz-page');
-        const resultsPage = document.getElementById('results-page');
-        const scoresPage = document.getElementById('scores-page');
-        const dashboardPage = document.getElementById('dashboard-page');
-        
-        const usernameInput = document.getElementById('username');
-        const classroomSelect = document.getElementById('classroom');
-        const startQuizBtn = document.getElementById('start-quiz-btn');
-        const showScoresBtn = document.getElementById('show-scores-btn');
-        const showDashboardBtn = document.getElementById('show-dashboard-btn');
-        
-        const currentQuestionElement = document.getElementById('current-question');
-        const questionText = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options-container');
-        
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const showExplanationBtn = document.getElementById('show-explanation-btn');
-        const finishBtn = document.getElementById('finish-btn');
-        
-        const resultNameElement = document.getElementById('result-name');
-        const resultClassroomElement = document.getElementById('result-classroom');
-        const resultDateElement = document.getElementById('result-date');
-        const scoreElement = document.getElementById('score');
-        const passStatusElement = document.getElementById('pass-status');
-        const certificateSection = document.getElementById('certificate-section');
-        const generateCertificateBtn = document.getElementById('generate-certificate-btn');
-        const showAnswersBtn = document.getElementById('show-answers-btn');
-        
-        const retryBtn = document.getElementById('retry-btn');
-        const viewScoresBtn = document.getElementById('view-scores-btn');
-        
-        const scoresTableBody = document.getElementById('scores-table-body');
-        const backToHomeFromScores = document.getElementById('back-to-home-from-scores');
-        
-        const backToHomeFromDashboard = document.getElementById('back-to-home-from-dashboard');
-        const totalParticipantsElement = document.getElementById('total-participants');
-        const passedCountElement = document.getElementById('passed-count');
-        const failedCountElement = document.getElementById('failed-count');
-        const passedTableBody = document.getElementById('passed-table-body');
-        const certificateList = document.getElementById('certificate-list');
+        const pages = {
+            login: document.getElementById('login-page'),
+            quiz: document.getElementById('quiz-page'),
+            results: document.getElementById('results-page'),
+            scores: document.getElementById('scores-page'),
+            dashboard: document.getElementById('dashboard-page')
+        };
 
-        // Tab navigation
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-                document.getElementById(`${tab.dataset.tab}-tab`).classList.remove('hidden');
-            });
+        // Instructions Modal
+        const instructionsModal = document.getElementById('instructions-modal');
+        const showInstructionsBtn = document.getElementById('show-instructions');
+        const closeInstructionsBtn = document.getElementById('close-instructions');
+        const closeInstructionsBtnBottom = document.getElementById('close-instructions-btn');
+
+        showInstructionsBtn.addEventListener('click', () => {
+            instructionsModal.classList.remove('hidden');
         });
 
-        // Format date in Thai
-        function formatThaiDate(date) {
-            const thaiMonths = [
-                'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
-                'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
-            ];
+        closeInstructionsBtn.addEventListener('click', () => {
+            instructionsModal.classList.add('hidden');
+        });
+
+        closeInstructionsBtnBottom.addEventListener('click', () => {
+            instructionsModal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside
+        instructionsModal.addEventListener('click', (e) => {
+            if (e.target === instructionsModal) {
+                instructionsModal.classList.add('hidden');
+            }
+        });
+
+        // Navigation
+        document.getElementById('nav-home').addEventListener('click', () => showPage('login'));
+        document.getElementById('nav-scores').addEventListener('click', () => {
+            showPage('scores');
+            fetchScores();
+        });
+        document.getElementById('nav-dashboard').addEventListener('click', () => {
+            showPage('dashboard');
+            fetchScores(true);
+        });
+        document.getElementById('back-to-home').addEventListener('click', () => showPage('login'));
+        document.getElementById('back-to-home-from-dashboard').addEventListener('click', () => showPage('login'));
+        document.getElementById('view-scores').addEventListener('click', () => {
+            showPage('scores');
+            fetchScores();
+        });
+        document.getElementById('retry-quiz').addEventListener('click', resetQuiz);
+        document.getElementById('refresh-scores').addEventListener('click', () => fetchScores());
+
+        // Start Quiz
+        document.getElementById('start-quiz').addEventListener('click', startQuiz);
+
+        // Quiz Navigation
+        document.getElementById('next-question').addEventListener('click', nextQuestion);
+        document.getElementById('prev-question').addEventListener('click', prevQuestion);
+        document.getElementById('finish-quiz').addEventListener('click', finishQuiz);
+
+        // Initialize
+        function init() {
+            showPage('login');
+            shuffleQuestions();
             
-            const day = date.getDate();
-            const month = thaiMonths[date.getMonth()];
-            const year = date.getFullYear() + 543; // Convert to Buddhist Era
-            
-            return `${day} ${month} ${year}`;
+            // Show instructions modal on first visit
+            if (!localStorage.getItem('instructionsShown')) {
+                setTimeout(() => {
+                    instructionsModal.classList.remove('hidden');
+                    localStorage.setItem('instructionsShown', 'true');
+                }, 1000);
+            }
         }
 
-        // Initialize quiz
-        function initQuiz() {
-            username = usernameInput.value.trim();
-            classroom = classroomSelect.value;
+        // Show specific page
+        function showPage(pageId) {
+            Object.keys(pages).forEach(key => {
+                pages[key].classList.add('hidden');
+            });
+            pages[pageId].classList.remove('hidden');
+        }
+
+        // Shuffle questions
+        function shuffleQuestions() {
+            shuffledQuestions = [...quizQuestions];
+            for (let i = shuffledQuestions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledQuestions[i], shuffledQuestions[j]] = [shuffledQuestions[j], shuffledQuestions[i]];
+            }
+        }
+
+        // Start the quiz
+        function startQuiz() {
+            const username = document.getElementById('username').value.trim();
+            const classroom = document.getElementById('classroom').value;
             
             if (!username) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'กรุณากรอกชื่อ-นามสกุล',
-                    text: 'โปรดกรอกชื่อ-นามสกุลก่อนเริ่มทำแบบทดสอบ'
+                    text: 'โปรดกรอกชื่อ-นามสกุลของคุณก่อนเริ่มทำแบบทดสอบ'
                 });
                 return;
             }
@@ -485,127 +643,87 @@
             if (!classroom) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'กรุณาเลือกระดับชั้น',
-                    text: 'โปรดเลือกระดับชั้นก่อนเริ่มทำแบบทดสอบ'
+                    title: 'กรุณาเลือกชั้นเรียน',
+                    text: 'โปรดเลือกชั้นเรียนของคุณก่อนเริ่มทำแบบทดสอบ'
                 });
                 return;
             }
             
-            // Set quiz date
-            const now = new Date();
-            quizDate = formatThaiDate(now);
+            currentUser.name = username;
+            currentUser.classroom = classroom;
             
-            // Reset quiz state
+            document.getElementById('user-info').textContent = `${username} | ${classroom}`;
+            
             currentQuestionIndex = 0;
+            userAnswers = Array(shuffledQuestions.length).fill(null);
             score = 0;
-            userAnswers = Array(quizQuestions.length).fill(null);
             
-            // สลับคำถามตั้งแต่เริ่มทำแบบทดสอบ
-            shuffleQuestionsOnStart();
+            // Shuffle questions at the start of each quiz
+            shuffleQuestions();
             
-            // Show quiz page
-            loginPage.classList.add('hidden');
-            quizPage.classList.remove('hidden');
-            
-            // Load first question
-            loadQuestion();
+            showPage('quiz');
+            displayQuestion();
         }
 
-        // สลับคำถามตั้งแต่เริ่มทำแบบทดสอบ
-        function shuffleQuestionsOnStart() {
-            // สร้างอาร์เรย์ของดัชนีคำถาม
-            originalQuestionOrder = Array.from({ length: quizQuestions.length }, (_, i) => i);
-            
-            // สลับดัชนีคำถาม
-            const shuffledIndices = [...originalQuestionOrder].sort(() => Math.random() - 0.5);
-            
-            // สร้างคำถามที่สลับแล้ว
-            shuffledQuestions = shuffledIndices.map(index => quizQuestions[index]);
-            
-            // เก็บลำดับคำถามเดิมเพื่อใช้ในการแสดงเฉลย
-            originalQuestionOrder = shuffledIndices;
-        }
-
-        // Load question
-        function loadQuestion() {
+        // Display current question
+        function displayQuestion() {
             const question = shuffledQuestions[currentQuestionIndex];
+            document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+            document.getElementById('total-questions').textContent = shuffledQuestions.length;
+            document.getElementById('question-text').textContent = `${currentQuestionIndex + 1}. ${question.question}`;
             
-            // Update question number
-            currentQuestionElement.textContent = currentQuestionIndex + 1;
-            
-            // Set question text
-            questionText.textContent = `${currentQuestionIndex + 1}. ${question.question}`;
-            
-            // Clear options
+            const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
             
-            // Add options
             const optionLetters = ['ก', 'ข', 'ค', 'ง'];
+            
             question.options.forEach((option, index) => {
                 const optionBtn = document.createElement('button');
-                optionBtn.className = 'option-btn w-full text-left py-3 px-4 rounded-lg';
+                optionBtn.className = 'option-btn w-full text-left bg-white border border-gray-300 rounded-lg py-3 px-4 hover:bg-blue-50 transition';
                 
                 if (userAnswers[currentQuestionIndex] === index) {
-                    optionBtn.classList.add('selected');
+                    optionBtn.classList.add('bg-blue-100', 'border-blue-500');
                 }
                 
-                optionBtn.innerHTML = `<span class="font-bold mr-2">${optionLetters[index]}.</span> ${option}`;
+                optionBtn.innerHTML = `<span class="inline-block w-6 h-6 bg-blue-600 text-white rounded-full text-center mr-2">${optionLetters[index]}</span> ${option}`;
                 
                 optionBtn.addEventListener('click', () => selectOption(index));
-                
                 optionsContainer.appendChild(optionBtn);
             });
             
-            // Update navigation buttons
-            updateNavigationButtons();
+            // Show/hide navigation buttons
+            document.getElementById('prev-question').classList.toggle('hidden', currentQuestionIndex === 0);
+            document.getElementById('next-question').classList.toggle('hidden', currentQuestionIndex === shuffledQuestions.length - 1);
+            document.getElementById('finish-quiz').classList.toggle('hidden', currentQuestionIndex !== shuffledQuestions.length - 1);
+            
+            // Hide explanation
+            document.getElementById('explanation-box').classList.add('hidden');
         }
 
-        // Select option
+        // Select an option
         function selectOption(optionIndex) {
             userAnswers[currentQuestionIndex] = optionIndex;
             
-            // Update option buttons
-            const optionButtons = optionsContainer.querySelectorAll('.option-btn');
-            optionButtons.forEach((btn, index) => {
-                btn.classList.remove('selected');
+            const optionBtns = document.querySelectorAll('.option-btn');
+            optionBtns.forEach((btn, index) => {
+                btn.classList.remove('bg-blue-100', 'border-blue-500', 'correct-answer', 'wrong-answer');
+                
                 if (index === optionIndex) {
-                    btn.classList.add('selected');
+                    btn.classList.add('bg-blue-100', 'border-blue-500');
                 }
             });
             
-            // Update navigation buttons
-            updateNavigationButtons();
-        }
-
-        // Update navigation buttons
-        function updateNavigationButtons() {
-            // Previous button
-            if (currentQuestionIndex > 0) {
-                prevBtn.classList.remove('hidden');
-            } else {
-                prevBtn.classList.add('hidden');
-            }
+            // Show explanation
+            const question = shuffledQuestions[currentQuestionIndex];
+            document.getElementById('explanation-text').textContent = question.explanation;
+            document.getElementById('explanation-box').classList.remove('hidden');
             
-            // Next button
-            if (currentQuestionIndex < shuffledQuestions.length - 1) {
-                nextBtn.classList.remove('hidden');
+            // Mark correct/wrong
+            if (optionIndex === question.correctAnswer) {
+                optionBtns[optionIndex].classList.add('correct-answer');
             } else {
-                nextBtn.classList.add('hidden');
-            }
-            
-            // Finish button
-            if (userAnswers.every(answer => answer !== null)) {
-                finishBtn.classList.remove('hidden');
-            } else {
-                finishBtn.classList.add('hidden');
-            }
-        }
-
-        // Go to previous question
-        function prevQuestion() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                loadQuestion();
+                optionBtns[optionIndex].classList.add('wrong-answer');
+                optionBtns[question.correctAnswer].classList.add('correct-answer');
             }
         }
 
@@ -613,152 +731,115 @@
         function nextQuestion() {
             if (currentQuestionIndex < shuffledQuestions.length - 1) {
                 currentQuestionIndex++;
-                loadQuestion();
+                displayQuestion();
+                window.scrollTo(0, 0);
             }
         }
 
-        // Show explanation for current question
-        function showExplanation() {
-            const question = shuffledQuestions[currentQuestionIndex];
-            const userAnswer = userAnswers[currentQuestionIndex];
-            const correctAnswer = question.answer;
-            const optionLetters = ['ก', 'ข', 'ค', 'ง'];
-            
-            // สร้างตารางเปรียบเทียบคำตอบ
-            let explanationHTML = `
-                <div class="p-4 bg-gray-50 rounded-lg">
-                    <h3 class="font-bold text-lg mb-2">เฉลยข้อที่ ${currentQuestionIndex + 1}</h3>
-                    <table class="answer-table">
-                        <tr>
-                            <th>คำตอบของคุณ</th>
-                            <th>เฉลย</th>
-                        </tr>
-                        <tr>
-                            <td class="${userAnswer === correctAnswer ? 'correct-answer' : 'wrong-answer'}">
-                                ${userAnswer !== null ? optionLetters[userAnswer] + '. ' + question.options[userAnswer] : 'ยังไม่ได้ตอบ'}
-                                ${userAnswer === correctAnswer ? ' <span class="check-icon">✓</span>' : ''}
-                            </td>
-                            <td class="correct-answer">
-                                ${optionLetters[correctAnswer] + '. ' + question.options[correctAnswer]}
-                                <span class="check-icon">✓</span>
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="mt-4">
-                        <p class="font-medium">คำอธิบาย:</p>
-                        <p>${question.explanation}</p>
-                    </div>
-                </div>
-            `;
-            
-            Swal.fire({
-                title: 'เฉลย',
-                html: explanationHTML,
-                width: 600,
-                confirmButtonText: 'ปิด',
-                confirmButtonColor: '#4f46e5'
-            });
+        // Go to previous question
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+                window.scrollTo(0, 0);
+            }
         }
 
-        // Show all answers
-        function showAllAnswers() {
-            let allAnswersHTML = `
-                <div class="p-4">
-                    <h3 class="font-bold text-xl mb-4 text-center">เฉลยแบบทดสอบทั้งหมด</h3>
-                    <div class="space-y-6">
-            `;
-            
-            shuffledQuestions.forEach((question, index) => {
-                const userAnswer = userAnswers[index];
-                const correctAnswer = question.answer;
-                const optionLetters = ['ก', 'ข', 'ค', 'ง'];
-                
-                allAnswersHTML += `
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <h4 class="font-bold mb-2">ข้อที่ ${index + 1}: ${question.question}</h4>
-                        <table class="answer-table">
-                            <tr>
-                                <th>คำตอบของคุณ</th>
-                                <th>เฉลย</th>
-                            </tr>
-                            <tr>
-                                <td class="${userAnswer === correctAnswer ? 'correct-answer' : 'wrong-answer'}">
-                                    ${userAnswer !== null ? optionLetters[userAnswer] + '. ' + question.options[userAnswer] : 'ไม่ได้ตอบ'}
-                                    ${userAnswer === correctAnswer ? ' <span class="check-icon">✓</span>' : ''}
-                                </td>
-                                <td class="correct-answer">
-                                    ${optionLetters[correctAnswer] + '. ' + question.options[correctAnswer]}
-                                    <span class="check-icon">✓</span>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="mt-2">
-                            <p class="text-sm">${question.explanation}</p>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            allAnswersHTML += `
-                    </div>
-                </div>
-            `;
-            
-            Swal.fire({
-                title: 'เฉลยแบบทดสอบ',
-                html: allAnswersHTML,
-                width: 800,
-                confirmButtonText: 'ปิด',
-                confirmButtonColor: '#4f46e5'
-            });
-        }
-
-        // Finish quiz
+        // Finish the quiz
         function finishQuiz() {
+            // Check if all questions are answered
+            const unansweredQuestions = userAnswers.findIndex(answer => answer === null);
+            
+            if (unansweredQuestions !== -1) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'คำถามยังไม่ครบ',
+                    text: `คุณยังไม่ได้ตอบคำถามข้อที่ ${unansweredQuestions + 1} โปรดตอบคำถามให้ครบทุกข้อ`,
+                    confirmButtonText: 'ไปยังข้อที่ยังไม่ได้ตอบ'
+                }).then(() => {
+                    currentQuestionIndex = unansweredQuestions;
+                    displayQuestion();
+                });
+                return;
+            }
+            
             // Calculate score
             score = 0;
             userAnswers.forEach((answer, index) => {
-                if (answer === shuffledQuestions[index].answer) {
+                if (answer === shuffledQuestions[index].correctAnswer) {
                     score += 10;
                 }
             });
             
-            // Update results page
-            resultNameElement.textContent = username;
-            resultClassroomElement.textContent = classroom;
-            resultDateElement.textContent = quizDate;
-            scoreElement.textContent = score;
+            // Display results
+            document.getElementById('result-user-info').textContent = `${currentUser.name} | ${currentUser.classroom}`;
+            document.getElementById('score').textContent = score;
             
-            // Check if passed
-            const isPassed = score >= 60;
-            passStatusElement.textContent = isPassed ? '🎊 ผ่านเกณฑ์ 🎊' : '❌ ไม่ผ่านเกณฑ์';
-            passStatusElement.className = isPassed ? 'text-lg font-medium text-green-600' : 'text-lg font-medium text-red-600';
-            
-            // Show certificate section if passed
-            if (isPassed) {
-                certificateSection.classList.remove('hidden');
+            const passStatus = document.getElementById('pass-status');
+            if (score >= PASS_SCORE) {
+                passStatus.textContent = '🎊 ผ่านเกณฑ์การทดสอบ 🎊';
+                passStatus.className = 'mt-2 text-lg text-green-600 font-bold';
             } else {
-                certificateSection.classList.add('hidden');
+                passStatus.textContent = '❌ ไม่ผ่านเกณฑ์การทดสอบ ❌';
+                passStatus.className = 'mt-2 text-lg text-red-600 font-bold';
             }
             
-            // Save result to Google Sheets
-            saveResult(isPassed);
+            // Display answers summary
+            const answersSummary = document.getElementById('answers-summary');
+            answersSummary.innerHTML = '';
             
-            // Show results page
-            quizPage.classList.add('hidden');
-            resultsPage.classList.remove('hidden');
+            shuffledQuestions.forEach((question, index) => {
+                const isCorrect = userAnswers[index] === question.correctAnswer;
+                const optionLetters = ['ก', 'ข', 'ค', 'ง'];
+                
+                const summaryItem = document.createElement('div');
+                summaryItem.className = `p-3 rounded-lg ${isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`;
+                
+                summaryItem.innerHTML = `
+                    <p class="font-medium ${isCorrect ? 'text-green-800' : 'text-red-800'}">
+                        ${index + 1}. ${question.question}
+                    </p>
+                    <p class="mt-1 ${isCorrect ? 'text-green-700' : 'text-red-700'}">
+                        คำตอบของคุณ: ${optionLetters[userAnswers[index]]}. ${question.options[userAnswers[index]]}
+                    </p>
+                    ${!isCorrect ? `<p class="mt-1 text-green-700">คำตอบที่ถูกต้อง: ${optionLetters[question.correctAnswer]}. ${question.options[question.correctAnswer]}</p>` : ''}
+                `;
+                
+                answersSummary.appendChild(summaryItem);
+            });
+            
+            // Save result to Google Sheets
+            saveResult();
+            
+            showPage('results');
+            window.scrollTo(0, 0);
+        }
+
+        // Format date in Thai short format
+        function formatThaiDate() {
+            const date = new Date();
+            const day = date.getDate();
+            const month = date.getMonth();
+            const year = date.getFullYear() + 543; // Convert to Buddhist Era
+            
+            const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            
+            return `${day} ${thaiMonths[month]} ${year}`;
         }
 
         // Save result to Google Sheets
-        function saveResult(isPassed) {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt6g-yNU3rKWev9XXp9LYbW4wxJRFM6JTkiG--oTI5LpyLie7ReTyXZ4nIUmuYu4QAJQ/exec';
+        function saveResult() {
+            const thaiDate = formatThaiDate();
+            document.getElementById('result-date').textContent = `วันที่ทำแบบทดสอบ: ${thaiDate}`;
+            
+            const passStatus = score >= PASS_SCORE ? "ผ่าน" : "ไม่ผ่าน";
             
             const data = {
-                name: username,
-                classroom: classroom,
+                name: currentUser.name,
+                classroom: currentUser.classroom,
                 score: score,
-                date: quizDate,
-                status: isPassed ? 'ผ่าน' : 'ไม่ผ่าน'
+                date: thaiDate,
+                status: passStatus
             };
             
             Swal.fire({
@@ -768,23 +849,33 @@
                 didOpen: () => {
                     Swal.showLoading();
                     
-                    fetch(scriptURL, {
+                    fetch(SCRIPT_URL, {
                         method: 'POST',
                         body: JSON.stringify(data),
                         headers: {
                             'Content-Type': 'text/plain'
                         }
                     })
-                    .then(response => {
-                        if (response.ok) {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result === 'success') {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'บันทึกผลการทดสอบเรียบร้อย',
-                                showConfirmButton: false,
-                                timer: 1500
+                                title: 'บันทึกผลการทดสอบสำเร็จ',
+                                text: 'ผลการทดสอบของคุณถูกบันทึกเรียบร้อยแล้ว',
+                                timer: 2000,
+                                showConfirmButton: false
                             });
+                            
+                            // Clear form data for next user
+                            document.getElementById('username').value = '';
+                            document.getElementById('classroom').value = '';
                         } else {
-                            throw new Error('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'เกิดข้อผิดพลาด',
+                                text: 'ไม่สามารถบันทึกผลการทดสอบได้ โปรดลองใหม่อีกครั้ง'
+                            });
                         }
                     })
                     .catch(error => {
@@ -792,308 +883,136 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'เกิดข้อผิดพลาด',
-                            text: 'ไม่สามารถบันทึกผลการทดสอบได้ โปรดลองอีกครั้ง'
+                            text: 'ไม่สามารถบันทึกผลการทดสอบได้ โปรดลองใหม่อีกครั้ง'
                         });
                     });
                 }
             });
         }
 
-        // Load scores from Google Sheets
-        function loadScores() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt6g-yNU3rKWev9XXp9LYbW4wxJRFM6JTkiG--oTI5LpyLie7ReTyXZ4nIUmuYu4QAJQ/exec';
-            
-            scoresTableBody.innerHTML = '<tr><td colspan="6" class="py-4 px-4 text-center text-gray-500">กำลังโหลดข้อมูล...</td></tr>';
-            
-            fetch(scriptURL)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.length > 0) {
-                        scoresTableBody.innerHTML = '';
-                        
-                        data.forEach((row, index) => {
-                            const tr = document.createElement('tr');
-                            tr.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+        // Fetch scores from Google Sheets
+        function fetchScores(isDashboard = false) {
+            Swal.fire({
+                title: 'กำลังโหลดข้อมูล',
+                text: 'โปรดรอสักครู่...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    
+                    fetch(SCRIPT_URL)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result === 'success') {
+                            quizData = data.data;
                             
-                            tr.innerHTML = `
-                                <td class="py-2 px-4 border-b border-gray-200">${index + 1}</td>
-                                <td class="py-2 px-4 border-b border-gray-200">${row.name}</td>
-                                <td class="py-2 px-4 border-b border-gray-200">${row.classroom}</td>
-                                <td class="py-2 px-4 border-b border-gray-200">${row.score}</td>
-                                <td class="py-2 px-4 border-b border-gray-200">${row.date}</td>
-                                <td class="py-2 px-4 border-b border-gray-200">
-                                    <span class="px-2 py-1 rounded-full text-xs font-medium ${row.status === 'ผ่าน' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                                        ${row.status}
-                                    </span>
-                                </td>
-                            `;
-                            
-                            scoresTableBody.appendChild(tr);
-                        });
-                    } else {
-                        scoresTableBody.innerHTML = '<tr><td colspan="6" class="py-4 px-4 text-center text-gray-500">ไม่พบข้อมูล</td></tr>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    scoresTableBody.innerHTML = '<tr><td colspan="6" class="py-4 px-4 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
-                });
-        }
-
-        // Load dashboard data
-        function loadDashboardData() {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwt6g-yNU3rKWev9XXp9LYbW4wxJRFM6JTkiG--oTI5LpyLie7ReTyXZ4nIUmuYu4QAJQ/exec';
-            
-            passedTableBody.innerHTML = '<tr><td colspan="5" class="py-4 px-4 text-center text-gray-500">กำลังโหลดข้อมูล...</td></tr>';
-            certificateList.innerHTML = '<div class="col-span-1 md:col-span-2 text-center py-4 text-gray-500">กำลังโหลดข้อมูล...</div>';
-            
-            fetch(scriptURL)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.length > 0) {
-                        // Update summary
-                        const totalParticipants = data.length;
-                        const passedStudents = data.filter(row => row.status === 'ผ่าน');
-                        const failedStudents = data.filter(row => row.status === 'ไม่ผ่าน');
-                        
-                        totalParticipantsElement.textContent = totalParticipants;
-                        passedCountElement.textContent = passedStudents.length;
-                        failedCountElement.textContent = failedStudents.length;
-                        
-                        // Update passed students table
-                        if (passedStudents.length > 0) {
-                            passedTableBody.innerHTML = '';
-                            
-                            passedStudents.forEach((row, index) => {
-                                const tr = document.createElement('tr');
-                                tr.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-                                
-                                tr.innerHTML = `
-                                    <td class="py-2 px-4 border-b border-gray-200">${index + 1}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200">${row.name}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200">${row.classroom}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200">${row.score}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200">${row.date}</td>
-                                `;
-                                
-                                passedTableBody.appendChild(tr);
-                            });
-                        } else {
-                            passedTableBody.innerHTML = '<tr><td colspan="5" class="py-4 px-4 text-center text-gray-500">ไม่พบข้อมูลผู้ที่ผ่านเกณฑ์</td></tr>';
-                        }
-                        
-                        // Update certificate list
-                        if (passedStudents.length > 0) {
-                            certificateList.innerHTML = '';
-                            
-                            passedStudents.forEach((row, index) => {
-                                const card = document.createElement('div');
-                                card.className = 'bg-white p-4 rounded-lg shadow border border-gray-200';
-                                
-                                card.innerHTML = `
-                                    <h4 class="font-bold text-gray-800">${row.name}</h4>
-                                    <p class="text-sm text-gray-600">${row.classroom} | คะแนน: ${row.score}</p>
-                                    <p class="text-sm text-gray-600 mb-3">วันที่ทดสอบ: ${row.date}</p>
-                                    <button class="generate-cert-btn bg-green-500 hover:bg-green-600 text-white text-sm py-1 px-3 rounded" 
-                                            data-name="${row.name}" 
-                                            data-classroom="${row.classroom}" 
-                                            data-score="${row.score}" 
-                                            data-date="${row.date}">
-                                        🏆 สร้างเกียรติบัตร
-                                    </button>
-                                `;
-                                
-                                certificateList.appendChild(card);
-                            });
-                            
-                            // Add event listeners to certificate buttons
-                            document.querySelectorAll('.generate-cert-btn').forEach(btn => {
-                                btn.addEventListener('click', () => {
-                                    const certData = {
-                                        name: btn.dataset.name,
-                                        classroom: btn.dataset.classroom,
-                                        score: btn.dataset.score,
-                                        date: btn.dataset.date
-                                    };
-                                    generateCertificatePDF(certData);
-                                });
-                            });
-                        } else {
-                            certificateList.innerHTML = '<div class="col-span-1 md:col-span-2 text-center py-4 text-gray-500">ไม่พบข้อมูลผู้ที่ผ่านเกณฑ์</div>';
-                        }
-                    } else {
-                        totalParticipantsElement.textContent = '0';
-                        passedCountElement.textContent = '0';
-                        failedCountElement.textContent = '0';
-                        passedTableBody.innerHTML = '<tr><td colspan="5" class="py-4 px-4 text-center text-gray-500">ไม่พบข้อมูล</td></tr>';
-                        certificateList.innerHTML = '<div class="col-span-1 md:col-span-2 text-center py-4 text-gray-500">ไม่พบข้อมูล</div>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    totalParticipantsElement.textContent = '0';
-                    passedCountElement.textContent = '0';
-                    failedCountElement.textContent = '0';
-                    passedTableBody.innerHTML = '<tr><td colspan="5" class="py-4 px-4 text-center text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>';
-                    certificateList.innerHTML = '<div class="col-span-1 md:col-span-2 text-center py-4 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
-                });
-        }
-
-        // Generate certificate PDF
-        function generateCertificatePDF(data = null) {
-            // Use provided data or current user data
-            const certData = data || {
-                name: username,
-                classroom: classroom,
-                score: score,
-                date: quizDate
-            };
-            
-            // Define the certificate content
-            const docDefinition = {
-                pageSize: 'A4',
-                pageOrientation: 'landscape',
-                background: [
-                    {
-                        image: 'https://krunid.github.io/knid13/suntonpu.jpg',
-                        width: 842,
-                        height: 595
-                    }
-                ],
-                content: [
-                    {
-                        text: 'เกียรติบัตร',
-                        fontSize: 36,
-                        bold: true,
-                        alignment: 'center',
-                        margin: [0, 80, 0, 20],
-                        color: '#4f46e5'
-                    },
-                    {
-                        text: 'ขอมอบเกียรติบัตรฉบับนี้เพื่อแสดงว่า',
-                        fontSize: 18,
-                        alignment: 'center',
-                        margin: [0, 20, 0, 10]
-                    },
-                    {
-                        text: certData.name,
-                        fontSize: 24,
-                        bold: true,
-                        alignment: 'center',
-                        margin: [0, 10, 0, 10],
-                        color: '#4f46e5'
-                    },
-                    {
-                        text: `ระดับชั้น ${certData.classroom}`,
-                        fontSize: 18,
-                        alignment: 'center',
-                        margin: [0, 10, 0, 10]
-                    },
-                    {
-                        text: 'ได้ผ่านการทดสอบความรู้',
-                        fontSize: 18,
-                        alignment: 'center',
-                        margin: [0, 10, 0, 10]
-                    },
-                    {
-                        text: 'เรื่อง "วันสุนทรภู่"',
-                        fontSize: 24,
-                        bold: true,
-                        alignment: 'center',
-                        margin: [0, 10, 0, 10],
-                        color: '#4f46e5'
-                    },
-                    {
-                        text: `ด้วยคะแนน ${certData.score} คะแนน`,
-                        fontSize: 18,
-                        alignment: 'center',
-                        margin: [0, 10, 0, 20]
-                    },
-                    {
-                        text: `ให้ไว้ ณ วันที่ ${certData.date}`,
-                        fontSize: 16,
-                        alignment: 'center',
-                        margin: [0, 20, 0, 40]
-                    },
-                    {
-                        columns: [
-                            {
-                                width: '*',
-                                text: ''
-                            },
-                            {
-                                width: 'auto',
-                                stack: [
-                                    {
-                                        text: '............................................',
-                                        alignment: 'center'
-                                    },
-                                    {
-                                        text: '(ผู้อำนวยการโรงเรียน)',
-                                        fontSize: 14,
-                                        alignment: 'center',
-                                        margin: [0, 5, 0, 0]
-                                    }
-                                ]
-                            },
-                            {
-                                width: '*',
-                                text: ''
+                            if (isDashboard) {
+                                updateDashboard();
+                            } else {
+                                updateScoresTable();
                             }
-                        ]
-                    }
-                ],
-                defaultStyle: {
-                    font: 'Sarabun'
+                            
+                            Swal.close();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'เกิดข้อผิดพลาด',
+                                text: 'ไม่สามารถโหลดข้อมูลได้ โปรดลองใหม่อีกครั้ง'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เกิดข้อผิดพลาด',
+                            text: 'ไม่สามารถโหลดข้อมูลได้ โปรดลองใหม่อีกครั้ง'
+                        });
+                    });
                 }
-            };
-            
-            // Generate and open the PDF
-            pdfMake.createPdf(docDefinition).open();
+            });
         }
 
-        // Event Listeners
-        startQuizBtn.addEventListener('click', initQuiz);
-        showScoresBtn.addEventListener('click', () => {
-            loginPage.classList.add('hidden');
-            scoresPage.classList.remove('hidden');
-            loadScores();
-        });
-        showDashboardBtn.addEventListener('click', () => {
-            loginPage.classList.add('hidden');
-            dashboardPage.classList.remove('hidden');
-            loadDashboardData();
-        });
-        
-        prevBtn.addEventListener('click', prevQuestion);
-        nextBtn.addEventListener('click', nextQuestion);
-        showExplanationBtn.addEventListener('click', showExplanation);
-        finishBtn.addEventListener('click', finishQuiz);
-        
-        generateCertificateBtn.addEventListener('click', () => generateCertificatePDF());
-        showAnswersBtn.addEventListener('click', showAllAnswers);
-        
-        retryBtn.addEventListener('click', () => {
-            resultsPage.classList.add('hidden');
-            loginPage.classList.remove('hidden');
-        });
-        
-        viewScoresBtn.addEventListener('click', () => {
-            resultsPage.classList.add('hidden');
-            scoresPage.classList.remove('hidden');
-            loadScores();
-        });
-        
-        backToHomeFromScores.addEventListener('click', () => {
-            scoresPage.classList.add('hidden');
-            loginPage.classList.remove('hidden');
-        });
-        
-        backToHomeFromDashboard.addEventListener('click', () => {
-            dashboardPage.classList.add('hidden');
-            loginPage.classList.remove('hidden');
-        });
+        // Update scores table
+        function updateScoresTable() {
+            const tableBody = document.getElementById('scores-table-body');
+            tableBody.innerHTML = '';
+            
+            if (quizData.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="6" class="text-center py-4 text-gray-500">ไม่พบข้อมูล</td>';
+                tableBody.appendChild(row);
+                return;
+            }
+            
+            quizData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                const statusClass = item.status === 'ผ่าน' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.name}</td>
+                    <td>${item.classroom}</td>
+                    <td>${item.score}</td>
+                    <td>${item.date}</td>
+                    <td><span class="px-2 py-1 rounded-full text-sm font-medium ${statusClass}">${item.status}</span></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            // Calculate statistics
+            const totalParticipants = quizData.length;
+            const passedStudents = quizData.filter(item => item.status === 'ผ่าน');
+            const totalPassed = passedStudents.length;
+            const totalFailed = totalParticipants - totalPassed;
+            
+            // Update dashboard cards
+            document.getElementById('total-participants').textContent = totalParticipants;
+            document.getElementById('total-passed').textContent = totalPassed;
+            document.getElementById('total-failed').textContent = totalFailed;
+            
+            // Update passed students table
+            const passedTableBody = document.getElementById('passed-table-body');
+            passedTableBody.innerHTML = '';
+            
+            if (passedStudents.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="5" class="text-center py-4 text-gray-500">ไม่พบข้อมูลผู้สอบผ่าน</td>';
+                passedTableBody.appendChild(row);
+                return;
+            }
+            
+            passedStudents.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.name}</td>
+                    <td>${item.classroom}</td>
+                    <td>${item.score}</td>
+                    <td>${item.date}</td>
+                `;
+                
+                passedTableBody.appendChild(row);
+            });
+        }
+
+        // Reset quiz
+        function resetQuiz() {
+            showPage('login');
+            document.getElementById('username').value = '';
+            document.getElementById('classroom').value = '';
+            shuffleQuestions();
+        }
+
+        // Initialize the app
+        init();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94f8939262f84b59',t:'MTc0OTg5MDk4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94fa5e1d811f9bba',t:'MTc0OTkwOTc3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
+
 
